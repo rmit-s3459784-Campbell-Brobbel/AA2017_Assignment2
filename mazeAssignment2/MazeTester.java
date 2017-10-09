@@ -155,10 +155,8 @@ class MazeTester {
 		}
 
 		outStream.println(mazeGen.getClass().getSimpleName() + " is generating the maze.");
-
 		// generate maze
 		mazeGen.generateMaze(maze);
-
 		// update whether maze should be visualised
 		maze.isVisu = isVisu;
 

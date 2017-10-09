@@ -29,7 +29,7 @@ public class TunnelMaze extends NormalMaze {
 		Queue<Cell> queue = new LinkedList<Cell>();
 		
 		queue.add(entrance);
-		
+
 		while (!queue.isEmpty()) {
 			Cell cell = queue.poll();
 			Cell next = null;
@@ -37,30 +37,45 @@ public class TunnelMaze extends NormalMaze {
 			int visitedNeigh = 0;
 			if (cell.tunnelTo != null) {
 				next = cell.tunnelTo;
-				if (visited[next.r][next.c])
-					visitedNeigh += 1; 
-				else
+				if (visited[next.r][next.c]){
+					visitedNeigh += 1;
+				}
+				else {
+					visited[next.r][next.c] = true;
 					queue.add(next);
+
+				}
+
 			}
 			for (int i = 0; i < NUM_DIR; i++) {
 				next = cell.neigh[i];
-				if (!isIn(next) || cell.wall[i].present)
+				if (cell.neigh[i] != null) {
+				}
+				if (!isIn(next) || cell.wall[i].present) {
+					if (cell != null && cell.wall[i] != null) {
+
+					}
 					continue;
-				if (visited[next.r][next.c])
-					visitedNeigh += 1; 
+				}
+				if (visited[next.r][next.c]){
+
+					visitedNeigh += 1;
+				}
 				else
 					queue.add(next);
 			}
-			
-			if (visitedNeigh > 1)
-				return false;
+
+			if (visitedNeigh > 1) {
+
+				return false;}
 		}
-		
+
 		for (int i = 0; i < sizeR; i++)
 			for (int j = 0; j < sizeC; j++)
-				if (!visited[i][j])
+				if (!visited[i][j]) {
 					return false;
-		
+				}
+
 		return true;
 	} // end of isPerfect()
 	
