@@ -1,6 +1,6 @@
 package mazeSolver;
 
-import maze.Maze;
+import maze.*;
 
 /**
  * Implements WallFollowerSolver
@@ -11,7 +11,11 @@ public class WallFollowerSolver implements MazeSolver {
 	@Override
 	public void solveMaze(Maze maze) {
 		// TODO Auto-generated method stub
-        
+
+		Cell startingCell = maze.entrance;
+		Cell nextCell = startingCell.neigh[Maze.EAST];
+
+
 	} // end of solveMaze()
     
     
