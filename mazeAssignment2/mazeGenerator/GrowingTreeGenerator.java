@@ -11,58 +11,58 @@ public class GrowingTreeGenerator implements MazeGenerator {
 	
 	double threshold = 0.1;
 	ArrayList<Cell> visitedCells = new ArrayList<Cell>();
+	ArrayList<Cell> cellsWithUnvisitedNeigh = new ArrayList<Cell>();
+
 	boolean isVisited[][];
 	@Override
 	public void generateMaze(Maze maze) {
 
-		int startingRow = (int)(Math.random() * maze.map.length);
-		int startingCol = (int)(Math.random() * maze.map.length);
-
-		System.out.printf("Maze R: %d, C: %d\n", maze.map.length, maze.map.length);
 		isVisited = new boolean[maze.map.length][maze.map.length];
 
-		Cell startingCell = maze.map[startingRow][startingCol];
+		Cell startingCell = null;
 
-		for (int x = 0; x < maze.sizeR; x++) {
-			System.out.println("_-_-_-_-_-_-_-_-_-_-_-_-_");
-			for (int y = 0; y < maze.sizeC; y++) {
-				if(maze.map[x][y] != null) {
-					System.out.printf("Maze Cell R: %d, C:%d\n", maze.map[x][y].r, maze.map[x][y].c);
+		while (startingCell == null) {
+			int startingRow = (int)(Math.random() * maze.map.length);
+			int startingCol = (int)(Math.random() * maze.map.length);
 
-				}
-				else {
-					System.out.println("Cell is null");
-				}
-			}
+			startingCell = maze.map[startingRow][startingCol];
 		}
-		System.out.println("----------------------------------");
+
+
 		visitedCells.add(startingCell);
-		isVisited[startingRow][startingCol] = true;
+		cellsWithUnvisitedNeigh.add(startingCell);
+		//isVisited[startingRow][startingCol] = true;
 		traverseMaze();
 
 	}
 
 	public void traverseMaze() {
 
-		while(this.visitedCells.size() > 0) {
+		while(this.cellsWithUnvisitedNeigh.size() > 0) {
 
-			int randomIndex = (int) (Math.random() * visitedCells.size());
-			Cell cell = this.visitedCells.get(randomIndex);
+			int randomIndex = (int) (Math.random() * this.cellsWithUnvisitedNeigh.size());
+			Cell cell = this.cellsWithUnvisitedNeigh.get(randomIndex);
 
 			Cell unvisitedNeighCell = null;
 			for (Cell neighbour : cell.neigh) {
-				if (neighbour != null && !isVisited[neighbour.r][neighbour.c]) {
+				if (neighbour != null && !cellIsVisited(neighbour)) {
+					System.out.printf("Neighbour Cell R: %d, C: %d\n", neighbour.r, neighbour.c);
 					unvisitedNeighCell = neighbour;
 					break;
+
 				}
+				else {
+					System.out.println("Neighbour is Null");
+				}
+				System.out.println("_______________________________-");
 			}
 			if (unvisitedNeighCell != null) {
 				removeWallBetween(cell, unvisitedNeighCell);
-				isVisited[unvisitedNeighCell.r][unvisitedNeighCell.c] = true;
 				visitedCells.add(unvisitedNeighCell);
+				cellsWithUnvisitedNeigh.add(unvisitedNeighCell);
 			}
 			else {
-				this.visitedCells.remove(cell);
+				this.cellsWithUnvisitedNeigh.remove(cell);
 			}
 
 
