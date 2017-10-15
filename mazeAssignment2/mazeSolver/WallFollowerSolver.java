@@ -1,16 +1,29 @@
 package mazeSolver;
 
-import maze.Maze;
+import maze.*;
 
 /**
  * Implements WallFollowerSolver
  */
 
+
 public class WallFollowerSolver implements MazeSolver {
-	
+
+	boolean isSolved = false;
+
 	@Override
 	public void solveMaze(Maze maze) {
 		// TODO Auto-generated method stub
+
+		Cell currentCell = maze.entrance;
+		int direction = Maze.SOUTH;
+
+		while (!isSolved){
+
+
+		}
+
+
         
 	} // end of solveMaze()
     
@@ -18,7 +31,7 @@ public class WallFollowerSolver implements MazeSolver {
 	@Override
 	public boolean isSolved() {
 		// TODO Auto-generated method stub
-		return false;
+		return this.isSolved;
 	} // end if isSolved()
     
     

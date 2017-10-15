@@ -94,9 +94,6 @@ public class BiDirectionalRecursiveBacktrackerSolver implements MazeSolver {
         }
 
 
-
-
-
         @Override
     public void solveMaze(Maze maze)  {
         Stack<Position> path = new StackList<Position>();
