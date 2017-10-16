@@ -205,6 +205,7 @@ class MazeTester {
 				} else {
 					outStream.println("Solver was failed!");
 				}
+
 			}
 		}
 	} // end of main()

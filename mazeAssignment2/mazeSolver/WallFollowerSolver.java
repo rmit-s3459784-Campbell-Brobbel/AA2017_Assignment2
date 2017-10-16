@@ -13,7 +13,6 @@ public class WallFollowerSolver implements MazeSolver {
 		// TODO Auto-generated method stub
 
 		Cell startingCell = maze.entrance;
-		Cell nextCell = startingCell.neigh[Maze.EAST];
 
 
 	} // end of solveMaze()
