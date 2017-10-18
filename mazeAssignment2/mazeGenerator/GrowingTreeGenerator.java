@@ -9,15 +9,11 @@ import maze.Cell;
 public class GrowingTreeGenerator implements MazeGenerator {
 	// Growing tree maze generator. As it is very general, here we implement as "usually pick the most recent cell, but occasionally pick a random cell"
 	
-	double threshold = 0.1;
 	ArrayList<Cell> visitedCells = new ArrayList<Cell>();
 	ArrayList<Cell> cellsWithUnvisitedNeigh = new ArrayList<Cell>();
 
-	boolean isVisited[][];
 	@Override
 	public void generateMaze(Maze maze) {
-
-		isVisited = new boolean[maze.map.length][maze.map.length];
 
 		Cell startingCell = null;
 
@@ -28,40 +24,43 @@ public class GrowingTreeGenerator implements MazeGenerator {
 			startingCell = maze.map[startingRow][startingCol];
 		}
 
-
 		visitedCells.add(startingCell);
 		cellsWithUnvisitedNeigh.add(startingCell);
-		//isVisited[startingRow][startingCol] = true;
 		traverseMaze();
 
 	}
 
+	/*
+	 * Traverses the maze and removes walls between random cells and their adjacent visited cells.
+	 */
 	public void traverseMaze() {
 
+		// Run this loop until the list of cells with unvisited neighbours is empty.
 		while(this.cellsWithUnvisitedNeigh.size() > 0) {
 
+			// Get a random cell who has neighbours left to visit.
 			int randomIndex = (int) (Math.random() * this.cellsWithUnvisitedNeigh.size());
 			Cell cell = this.cellsWithUnvisitedNeigh.get(randomIndex);
 
+			// Get a random neighbour of the current cell who has not been visited.
 			Cell unvisitedNeighCell = null;
 			for (Cell neighbour : cell.neigh) {
 				if (neighbour != null && !cellIsVisited(neighbour)) {
-					System.out.printf("Neighbour Cell R: %d, C: %d\n", neighbour.r, neighbour.c);
 					unvisitedNeighCell = neighbour;
 					break;
 
 				}
-				else {
-					System.out.println("Neighbour is Null");
-				}
-				System.out.println("_______________________________-");
+
 			}
 			if (unvisitedNeighCell != null) {
+				// Remove the wall between the current cell and the neighbour cell
 				removeWallBetween(cell, unvisitedNeighCell);
 				visitedCells.add(unvisitedNeighCell);
 				cellsWithUnvisitedNeigh.add(unvisitedNeighCell);
 			}
 			else {
+				// If there is no random neighbour who hasnt been visited,
+				// remove the current cell from cellsWithUnvisitedNeigh.
 				this.cellsWithUnvisitedNeigh.remove(cell);
 			}
 
@@ -69,22 +68,20 @@ public class GrowingTreeGenerator implements MazeGenerator {
 		}
 	}
 
+	// Checks if the given cell has already been visited.
 	public boolean cellIsVisited(Cell cell) {
 
-		for(Cell c : this.visitedCells) {
-			if (c.equals(cell)) {
-				return true;
-			}
-		}
-		return false;
+		return visitedCells.contains(cell);
 	}
 
+	// Removes the wall between 2 cells
 	private void removeWallBetween(Cell c1, Cell c2) {
 		int direction = getDirection(c1,c2);
 		c1.wall[direction].present = false;
 
 	}
 
+	// Returns an integer representing a direction between 2 cells.
 	private int getDirection(Cell startingCell, Cell destinationCell) {
 
 		// Direction is South

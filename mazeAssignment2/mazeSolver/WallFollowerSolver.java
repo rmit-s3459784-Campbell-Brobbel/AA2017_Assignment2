@@ -16,13 +16,19 @@ public class WallFollowerSolver implements MazeSolver {
 	public void solveMaze(Maze maze) {
 		// TODO Auto-generated method stub
 
-		this.mazeType = mazeType(maze);
-
+		this.mazeType = maze.type;
 		Cell currentCell = maze.entrance;
+
 		int currentDirection = Maze.SOUTH;
 
 		while (!isSolved){
 			maze.drawFtPrt(currentCell);
+
+			// If a tunnel exists, draw the tunnels other side.
+			if (currentCell.tunnelTo != null) {
+				maze.drawFtPrt(currentCell.tunnelTo);
+
+			}
 			// If the current cell is the exit
 			if(currentCell.equals(maze.exit)) {
 				isSolved = true;
@@ -30,6 +36,7 @@ public class WallFollowerSolver implements MazeSolver {
 			else {
 				// If there is a wall to the left of the cell.
 				int counterClockwiseDirection = getCounterClockwiseDirection(currentDirection);
+				int doubleCounterClockwiseDir = getCounterClockwiseDirection(counterClockwiseDirection);
 				if (currentCell.wall[counterClockwiseDirection].present) {
 
 					// If there is a wall in front
@@ -49,7 +56,6 @@ public class WallFollowerSolver implements MazeSolver {
 
 					// Rotate CCW.
 					currentDirection = getCounterClockwiseDirection(currentDirection);
-
 					// Step forward.
 					currentCell = currentCell.neigh[currentDirection];
 
@@ -76,10 +82,11 @@ public class WallFollowerSolver implements MazeSolver {
 		return 0;
 	} // end of cellsExplored()
 
-
+	// Gets the direction of the cell that is 1 rotation counter clockwise.
 	private int getCounterClockwiseDirection(int currentDirection) {
 
-		if (mazeType == 0 ) {
+		// Normal or tunnel maze.
+		if (mazeType == Maze.NORMAL || mazeType == Maze.TUNNEL) {
 			switch (currentDirection) {
 				case Maze.NORTH:
 					return Maze.WEST;
@@ -91,20 +98,21 @@ public class WallFollowerSolver implements MazeSolver {
 					return Maze.NORTH;
 			}
 		}
-		else if (mazeType == 1) {
+		// Hex maze.
+		else if (mazeType == Maze.HEX) {
 			switch (currentDirection) {
 				case Maze.NORTHWEST:
-					return Maze.WEST;
-				case Maze.WEST:
 					return Maze.SOUTHWEST;
-				case Maze.SOUTHWEST:
+				case Maze.WEST:
 					return Maze.SOUTHEAST;
-				case Maze.SOUTHEAST:
+				case Maze.SOUTHWEST:
 					return Maze.EAST;
-				case Maze.EAST:
+				case Maze.SOUTHEAST:
 					return Maze.NORTHEAST;
-				case Maze.NORTHEAST:
+				case Maze.EAST:
 					return Maze.NORTHWEST;
+				case Maze.NORTHEAST:
+					return Maze.WEST;
 			}
 		}
 
@@ -112,9 +120,10 @@ public class WallFollowerSolver implements MazeSolver {
 		return 0;
 	}
 
-
+	// Gets the direction of the cell that is 1 rotation counter clockwise.
 	private int getClockwiseDirection(int currentDirection) {
-		if (mazeType == 0) {
+		// Normal Maze
+		if (mazeType == Maze.NORMAL || mazeType == Maze.TUNNEL) {
 			switch (currentDirection) {
 				case Maze.NORTH:
 					return Maze.EAST;
@@ -126,7 +135,8 @@ public class WallFollowerSolver implements MazeSolver {
 					return Maze.SOUTH;
 			}
 		}
-		else if (mazeType == 1) {
+		// Hex Maze
+		else {
 			switch (currentDirection) {
 				case Maze.NORTHWEST:
 					return Maze.NORTHEAST;
@@ -146,32 +156,4 @@ public class WallFollowerSolver implements MazeSolver {
 		return 0;
 	}
 
-	private int mazeType(Maze maze) {
-
-		Cell entrance = maze.entrance;
-		// THe maze is hex if any of these are true.
-		if (entrance.neigh[Maze.NORTHWEST] != null || entrance.neigh[Maze.NORTHEAST] != null
-				|| entrance.neigh[Maze.SOUTHEAST] != null || entrance.neigh[Maze.SOUTHWEST] != null) {
-			System.out.printf("Maze Type Is 1");
-			return 1;
-		}
-		else {
-
-			for (Cell[] cellArray : maze.map) {
-				for (Cell cell : cellArray) {
-					if (cell.tunnelTo != null) {
-						System.out.printf("Maze Type Is 2");
-
-						// Maze Is Tunnel Maze.
-						return 2;
-					}
-				}
-			}
-		}
-
-		// Maze Is Normal Maze
-		System.out.printf("Maze Type Is 0");
-
-		return 0;
-	}
 } // end of class WallFollowerSolver
